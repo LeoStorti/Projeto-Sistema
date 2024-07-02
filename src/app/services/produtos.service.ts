@@ -36,4 +36,9 @@ export class ProdutosService {
     adicionarProduto(produto: Produto): Observable<any> {
       return this.http.post(this.apiUrl+'/Produtos', produto);
     }
+
+    getProdutosByFornecedorId(id: number): Observable<any> {
+      // Lógica para chamar a API e retornar os produtos
+      return this.http.get<any>(`/api/fornecedores/${id}`);
+    }
 }

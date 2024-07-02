@@ -1,12 +1,11 @@
-// src/app/components/frm-produtos-cadastro/frm-produtos-cadastro.component.ts
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { ProdutosService, Produto } from '../../services/produtos.service';
 
 @Component({
@@ -18,22 +17,47 @@ import { ProdutosService, Produto } from '../../services/produtos.service';
     MatInputModule,
     MatFormFieldModule,
     CommonModule,
-    FormsModule // Add FormsModule
+    FormsModule
   ],
   templateUrl: './frm-produtos-cadastro.component.html',
   styleUrls: ['./frm-produtos-cadastro.component.css']
 })
-export class FrmProdutosCadastroComponent {
+export class FrmProdutosCadastroComponent implements OnInit {
   produto: Produto = {
     productId: 0,
     nomeProduto: '',
     fornecedor: '',
     quantidade: 0
   };
+  fornecedorId!: number;
 
-  constructor(private router: Router, private produtosService: ProdutosService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private produtosService: ProdutosService
+  ) {}
 
-  onTabChange(event: any) {
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.fornecedorId = +params.get('id')!;
+      if (this.fornecedorId) {
+        this.carregarProdutosFornecedor(this.fornecedorId);
+      }
+    });
+  }
+
+  carregarProdutosFornecedor(fornecedorId: number): void {
+    this.produtosService.getProdutosByFornecedorId(fornecedorId).subscribe(
+      (produtos: Produto[]) => {
+        this.produto = produtos[0]; // Supondo que há apenas um produto. Ajuste conforme necessário.
+      },
+      error => {
+        console.error('Erro ao carregar produtos do fornecedor', error);
+      }
+    );
+  }
+
+  onTabChange(event: any): void {
     const tabLabel = event.tab.textLabel;
     if (tabLabel === 'Consulta') {
       this.router.navigate(['/frmprodutosconsulta']);
@@ -42,7 +66,7 @@ export class FrmProdutosCadastroComponent {
     }
   }
 
-  salvarProduto() {
+  salvarProduto(): void {
     if (this.produto.productId) {
       // Atualizar produto existente
       this.produtosService.atualizarProduto(this.produto).subscribe(
@@ -55,8 +79,7 @@ export class FrmProdutosCadastroComponent {
         }
       );
     } else {
-
-      console.log(this.produto)
+      console.log(this.produto);
       // Adicionar novo produto
       this.produtosService.adicionarProduto(this.produto).subscribe(
         response => {
@@ -70,7 +93,7 @@ export class FrmProdutosCadastroComponent {
     }
   }
 
-  cancelar() {
+  cancelar(): void {
     this.router.navigate(['/frmprodutosconsulta']);
   }
 }

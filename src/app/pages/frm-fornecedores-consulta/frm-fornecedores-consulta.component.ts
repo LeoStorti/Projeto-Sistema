@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { FormsModule } from '@angular/forms'; // Importe FormsModule
+import { FormsModule } from '@angular/forms';
 import { FornecedorService } from '../../services/fornecedor.service';
 
 export interface Fornecedor {
@@ -41,9 +41,11 @@ export class FrmFornecedoresConsultaComponent implements OnInit {
   filtroNome: string = '';
   fornecedorSelecionado: Fornecedor | null = null;
 
-
-  constructor(private router: Router, private http: HttpClient, private fornecedoresService: FornecedorService) {}
-//  constructor(private router: Router, private produtosService: ProdutosService, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private fornecedoresService: FornecedorService
+  ) {}
 
   ngOnInit(): void {
     this.carregarFornecedores();
@@ -80,28 +82,27 @@ export class FrmFornecedoresConsultaComponent implements OnInit {
       this.router.navigate(['/frmfornecedorescadastro']);
     }
   }
-  selecionarRegistro(registro: Fornecedor) {
+
+  selecionarRegistro(registro: Fornecedor): void {
     this.fornecedorSelecionado = registro;
     // Implemente a lógica de ação ao selecionar, se necessário
   }
 
-// Método para excluir o fornecedor selecionado
-excluirFornecedorSelecionado() {
-  if (this.fornecedorSelecionado) {
-    const id = this.fornecedorSelecionado.id; // Ajuste para o campo ID correto
-    this.fornecedoresService.excluirFornecedor(id).subscribe(
-      () => {
-        console.log('Fornecedor excluído com sucesso.');
-        this.carregarFornecedores(); // Recarregar os fornecedores após a exclusão
-      },
-      error => {
-        console.error('Erro ao excluir o fornecedor:', error);
-        // Tratar o erro conforme necessário
-      }
-    );
-  } else {
-    console.warn('Nenhum fornecedor selecionado para excluir.');
+  excluirFornecedorSelecionado(): void {
+    if (this.fornecedorSelecionado) {
+      const id = this.fornecedorSelecionado.id; // Ajuste para o campo ID correto
+      this.fornecedoresService.excluirFornecedor(id).subscribe(
+        () => {
+          console.log('Fornecedor excluído com sucesso.');
+          this.carregarFornecedores(); // Recarregar os fornecedores após a exclusão
+        },
+        error => {
+          console.error('Erro ao excluir o fornecedor:', error);
+          // Tratar o erro conforme necessário
+        }
+      );
+    } else {
+      console.warn('Nenhum fornecedor selecionado para excluir.');
+    }
   }
-}
-
 }
