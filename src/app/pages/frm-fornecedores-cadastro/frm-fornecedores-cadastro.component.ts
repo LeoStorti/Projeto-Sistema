@@ -10,8 +10,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 export interface Produto {
-  id: number;
-  nome: string;
+  productId: number;
+  nomeProduto: string;
+  fornecedor: string;
   quantidade: number;
 }
 
@@ -34,7 +35,7 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
   fornecedorId!: number;
   fornecedor: any = {};
   produtos: Produto[] = [];
-  displayedColumns: string[] = ['id', 'nome', 'quantidade'];
+  displayedColumns: string[] = ['productId', 'nomeProduto', 'fornecedor', 'quantidade'];
 
   constructor(
     private route: ActivatedRoute,
@@ -50,16 +51,28 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
         this.carregarDadosFornecedor(this.fornecedorId);
       }
     });
+    this.carregarTodosProdutos();
   }
 
   carregarDadosFornecedor(id: number): void {
     console.log('Carregando dados do fornecedor com ID:', id); // Log para verificar a chamada da API
-    this.http.get(`https://localhost:7219/api/fornecedores/${id}`).subscribe((data: any) => {
+    this.http.get<any>(`https://localhost:7219/api/fornecedores/${id}`).subscribe((data: any) => {
       console.log('Dados do fornecedor carregados:', data); // Log para verificar os dados carregados
       this.fornecedor = data;
       this.produtos = data.produtos || [];
     }, error => {
       console.error('Erro ao carregar dados do fornecedor', error);
+      // Adicione qualquer lógica de tratamento de erro aqui, se necessário
+    });
+  }
+
+  carregarTodosProdutos(): void {
+    console.log('Carregando todos os produtos'); // Log para verificar a chamada da API
+    this.http.get<Produto[]>(`https://localhost:7219/api/produtos`).subscribe((data: Produto[]) => {
+      console.log('Todos os produtos carregados:', data); // Log para verificar os dados carregados
+      this.produtos = data;
+    }, error => {
+      console.error('Erro ao carregar todos os produtos', error);
       // Adicione qualquer lógica de tratamento de erro aqui, se necessário
     });
   }
