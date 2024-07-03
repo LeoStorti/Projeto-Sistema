@@ -8,8 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { FornecedorService } from '../../services/fornecedor.service';
-
 
 export interface Produto {
   productId: number;
@@ -42,9 +40,7 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient,
-    private fornecedoresService: FornecedorService
-
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +56,7 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
 
   carregarDadosFornecedor(id: number): void {
     console.log('Carregando dados do fornecedor com ID:', id); // Log para verificar a chamada da API
-    this.fornecedoresService.getFornecedorById(id).subscribe((data: any) => {
+    this.http.get<any>(`https://localhost:7219/api/fornecedores/${id}`).subscribe((data: any) => {
       console.log('Dados do fornecedor carregados:', data); // Log para verificar os dados carregados
       this.fornecedor = data;
       this.produtos = data.produtos || [];

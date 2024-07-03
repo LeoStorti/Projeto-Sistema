@@ -36,8 +36,5 @@ export class FornecedorService {
    const url = `${'https://localhost:7219/api/Fornecedores'}/${id}`;
     return this.http.delete(url);
   }
-  
-  getFornecedorById(id: number): Observable<Fornecedor> { // Método adicionado
-    return this.http.get<Fornecedor>(`${this.apiUrl}/fornecedores/${id}`);
-  }
+
 }
