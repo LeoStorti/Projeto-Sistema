@@ -1,23 +1,9 @@
 import { Component } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-tela-de-login',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatIconModule,
-    CommonModule,
-    ReactiveFormsModule
-  ],
   templateUrl: './tela-de-login.component.html',
   styleUrls: ['./tela-de-login.component.css']
 })
@@ -45,9 +31,5 @@ export class TelaDeLoginComponent {
         }
       );
     }
-  }
-
-  onLogout() {
-    // Adicione lógica de logout aqui
   }
 }

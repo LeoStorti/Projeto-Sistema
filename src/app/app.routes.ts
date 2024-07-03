@@ -5,15 +5,17 @@ import { FrmFornecedoresCadastroComponent } from './pages/frm-fornecedores-cadas
 import { FrmFornecedoresConsultaComponent } from './pages/frm-fornecedores-consulta/frm-fornecedores-consulta.component';
 import { FrmProdutosCadastroComponent } from './pages/frm-produtos-cadastro/frm-produtos-cadastro.component';
 import { FrmProdutosConsultaComponent } from './pages/frm-produtos-consulta/frm-produtos-consulta.component';
+import { AuthGuard } from './auth.guard'; // Importar o AuthGuard
 
-export const routes: Routes = [
+
+const routes: Routes = [
   { path: '', redirectTo: '/frmfornecedoresconsulta', pathMatch: 'full' },
   { path: 'login', component: TelaDeLoginComponent },
-  { path: 'frmprinc', component: FrmprincComponent },
-  { path: 'frmfornecedorescadastro', component: FrmFornecedoresCadastroComponent },
-  { path: 'frmfornecedoresconsulta', component: FrmFornecedoresConsultaComponent },
-  { path: 'frmfornecedorescadastro/:id', component: FrmFornecedoresCadastroComponent },// Verificar
-  { path: 'frmprodutoscadastro', component: FrmProdutosCadastroComponent },
-  { path: 'frmprodutosconsulta', component: FrmProdutosConsultaComponent },
+  { path: 'frmprinc', component: FrmprincComponent, canActivate: [AuthGuard] },
+  { path: 'frmfornecedorescadastro', component: FrmFornecedoresCadastroComponent, canActivate: [AuthGuard] },
+  { path: 'frmfornecedoresconsulta', component: FrmFornecedoresConsultaComponent, canActivate: [AuthGuard] },
+  { path: 'frmfornecedorescadastro/:id', component: FrmFornecedoresCadastroComponent, canActivate: [AuthGuard] },
+  { path: 'frmprodutoscadastro', component: FrmProdutosCadastroComponent, canActivate: [AuthGuard] },
+  { path: 'frmprodutosconsulta', component: FrmProdutosConsultaComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/frmfornecedoresconsulta' }
 ];

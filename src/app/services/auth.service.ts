@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 interface LoginResponse {
-  token: any;
+  token: string;
   message: string;
 }
 
@@ -23,8 +23,10 @@ export class AuthService {
       tap(response => {
         console.log('Server response:', response); // Log para depuração
         if (response && response.message === 'Login successful') {
+          localStorage.setItem('auth_token', response.token); // Armazena o token no localStorage
+          console.log('Token stored in localStorage:', localStorage.getItem('auth_token')); // Verifica se o token está sendo armazenado corretamente
           console.log('Login successful, navigating to /frmprinc');
-          this.router.navigate(['/frmprinc']); // Redirecione para a próxima página
+          this.router.navigate(['/frmprinc']); // Redireciona para a próxima página
         } else {
           console.error('Login failed: Unexpected response format', response);
         }
@@ -33,5 +35,4 @@ export class AuthService {
         console.error('Login failed: HTTP error', error);
       })
     );
-  }
-}
+  }}
