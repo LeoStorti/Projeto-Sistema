@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 
 interface LoginResponse {
   token: string;
@@ -30,9 +30,14 @@ export class AuthService {
         } else {
           console.error('Login failed: Unexpected response format', response);
         }
-      },
-      error => {
+      }),
+      catchError(error => {
         console.error('Login failed: HTTP error', error);
+        throw error; // Lança o erro para ser tratado pelo código que chama login()
       })
-    );
+    )
+  }
+  isLoggedIn(): boolean {
+    const authToken = localStorage.getItem('auth_token');
+    return authToken !== null; // Retorna true se o token estiver presente, false caso contrário
   }}

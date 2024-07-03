@@ -8,7 +8,7 @@ import { FrmProdutosConsultaComponent } from './pages/frm-produtos-consulta/frm-
 import { AuthGuard } from './auth.guard'; // Importar o AuthGuard
 
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', redirectTo: '/frmfornecedoresconsulta', pathMatch: 'full' },
   { path: 'login', component: TelaDeLoginComponent },
   { path: 'frmprinc', component: FrmprincComponent, canActivate: [AuthGuard] },
