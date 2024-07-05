@@ -21,6 +21,7 @@ bootstrapApplication(AppComponent, {
         { path: 'login', component: TelaDeLoginComponent },
         { path: 'frmprinc', component: FrmprincComponent },
         { path: 'frmfornecedorescadastro', component: FrmFornecedoresCadastroComponent },
+        { path: 'frmfornecedorescadastro/:id', component: FrmFornecedoresCadastroComponent},
         { path: 'frmfornecedoresconsulta', component: FrmFornecedoresConsultaComponent },
         { path: 'frmprodutoscadastro', component: FrmProdutosCadastroComponent },
         { path: 'frmprodutosconsulta', component: FrmProdutosConsultaComponent },
