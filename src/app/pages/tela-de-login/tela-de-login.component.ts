@@ -50,7 +50,7 @@ export class TelaDeLoginComponent {
   onLogout() {
     // Adicione lógica de logout aqui
   }
-  
+
   isLoggedIn(): boolean {
     const authToken = localStorage.getItem('auth_token');
     return authToken !== null; // Retorna true se o token estiver presente, false caso contrário

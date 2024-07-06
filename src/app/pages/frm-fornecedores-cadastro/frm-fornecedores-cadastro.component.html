@@ -7,43 +7,43 @@
 </head>
 <body>
   <div class="tabcontrol">
-    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <mat-tab-group [(selectedIndex)]="activeTabIndex" (selectedTabChange)="onTabChange($event)">
       <mat-tab label="Consulta">
         <!-- Conteúdo da aba de consulta -->
         <!-- Adicione o conteúdo da consulta aqui -->
       </mat-tab>
-      <mat-tab label="Cadastro" active>
+      <mat-tab label="Cadastro">
         <!-- Conteúdo da aba de cadastro -->
         <div class="cadastro">
           <div class="form-group">
             <mat-form-field appearance="outline">
               <mat-label>Nome</mat-label>
-              <input matInput id="nome" placeholder="Digite o nome do fornecedor" [value]="fornecedor.nome">
+              <input matInput id="nome" placeholder="Digite o nome do fornecedor" [(ngModel)]="fornecedor.nome">
             </mat-form-field>
           </div>
 
           <div class="form-group">
             <mat-form-field appearance="outline">
               <mat-label>CNPJ</mat-label>
-              <input matInput id="cnpj" placeholder="Digite o CNPJ do fornecedor" [value]="fornecedor.cnpj">
+              <input matInput id="cnpj" placeholder="Digite o CNPJ do fornecedor" [(ngModel)]="fornecedor.cnpj">
             </mat-form-field>
           </div>
 
           <div class="form-group">
             <mat-form-field appearance="outline">
               <mat-label>Endereço</mat-label>
-              <input matInput id="endereco" placeholder="Digite o endereço do fornecedor" [value]="fornecedor.endereco">
+              <input matInput id="endereco" placeholder="Digite o endereço do fornecedor" [(ngModel)]="fornecedor.endereco">
             </mat-form-field>
           </div>
 
           <div class="form-group-inline">
-            <mat-checkbox id="ativo" [checked]="fornecedor.ativo">Ativo</mat-checkbox>
+            <mat-checkbox id="ativo" [(ngModel)]="fornecedor.ativo">Ativo</mat-checkbox>
           </div>
 
           <div class="form-group">
             <mat-form-field appearance="outline">
               <mat-label>Nível</mat-label>
-              <input matInput id="nivel" type="number" min="0" placeholder="Digite o nível do fornecedor" [value]="fornecedor.nivel">
+              <input matInput id="nivel" type="number" min="0" placeholder="Digite o nível do fornecedor" [(ngModel)]="fornecedor.nivel">
             </mat-form-field>
           </div>
 
@@ -85,5 +85,7 @@
       </mat-tab>
     </mat-tab-group>
   </div>
+
+
 </body>
 </html>
