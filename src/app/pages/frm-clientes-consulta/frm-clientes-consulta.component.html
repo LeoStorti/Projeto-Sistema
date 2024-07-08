@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta de Fornecedores</title>
+  <link rel="stylesheet" href="frm-clientes-consulta.component.css">
+</head>
+<body>
+  <div class="tabcontrol">
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Consulta" active>
+        <div class="consulta">
+          <div class="search-bar">
+            <mat-form-field appearance="outline">
+              <mat-label>Digite o nome do fornecedor</mat-label>
+              <input matInput type="text" [(ngModel)]="filtroNome" placeholder="Digite o nome">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (dblclick)="aplicarFiltro()">Pesquisar</button>
+            <button mat-raised-button color="warn" (dblclick)="limparFiltro()">Limpar</button>
+          </div>
+
+          <div class="data-grid">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="ClienteId">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element">
+                  <a (click)="navigateToCadastro(element.id)">{{element.id}}</a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="NomeCliente">
+                <th mat-header-cell *matHeaderCellDef> Nome </th>
+                <td mat-cell *matCellDef="let element"> {{element.NomeCliente}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="CNPJCliente">
+                <th mat-header-cell *matHeaderCellDef> CNPJ </th>
+                <td mat-cell *matCellDef="let element"> {{element.CNPJCliente}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="EnderecoCliente">
+                <th mat-header-cell *matHeaderCellDef> Endereço </th>
+                <td mat-cell *matCellDef="let element"> {{element.EnderecoCliente}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="TelefoneCliente">
+                <th mat-header-cell *matHeaderCellDef> Telefone </th>
+                <td mat-cell *matCellDef="let element"> {{element.TelefoneCliente}} </td>
+              </ng-container>
+
+              <!-- Alteração para clique na linha e seleção -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                  (click)="selecionarRegistro(row)" [class.selecionado]="row === clientesSelecionado">
+              </tr>
+            </table>
+          </div>
+
+          <!-- Botões de ação -->
+          <div class="action-buttons">
+            <button mat-raised-button color="warn">Excluir</button>
+            <button mat-raised-button color="accent">Novo</button>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Cadastro">
+        <!-- Conteúdo da aba de cadastro -->
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</body>
+</html>
