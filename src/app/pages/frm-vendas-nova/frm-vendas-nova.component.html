@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Vendas</title>
+  <link rel="stylesheet" href="frm-vendas-nova.component.css">
+</head>
+<body>
+  <div class="tabcontrol">
+    <mat-tab-group [(selectedIndex)]="activeTabIndex" (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Consulta">
+        <!-- Conteúdo da aba de consulta -->
+        <!-- Adicione o conteúdo da consulta aqui -->
+      </mat-tab>
+      <mat-tab label="Cadastro">
+        <!-- Conteúdo da aba de cadastro -->
+        <div class="cadastro">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Nota Fiscal</mat-label>
+              <input matInput id="nf" placeholder="Digite a nota fiscal" [(ngModel)]="venda.NF">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>ID do Cliente</mat-label>
+              <input matInput id="clienteId" placeholder="Digite o ID do cliente" [(ngModel)]="venda.ClienteId">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Valor da Venda</mat-label>
+              <input matInput id="valorDeVenda" placeholder="Digite o valor da venda" [(ngModel)]="venda.ValorDeVenda" type="number">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome do Produto</mat-label>
+              <input matInput id="produtosNome" placeholder="Digite o nome do produto" [(ngModel)]="venda.Produtos_Nome">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>ID do Produto</mat-label>
+              <input matInput id="produtosId" placeholder="Digite o ID do produto" [(ngModel)]="venda.Produtos_Id">
+            </mat-form-field>
+          </div>
+
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Número do Pedido</mat-label>
+              <input matInput id="numeroPedido" placeholder="Digite o número do pedido" [(ngModel)]="venda.Numero_Pedido">
+            </mat-form-field>
+          </div>
+
+          <!-- Botões para cancelar e salvar -->
+          <div class="action-buttons">
+            <button mat-raised-button color="warn" (click)="cancelar()">Cancelar</button>
+            <button mat-raised-button color="primary" (click)="salvarVenda()">Salvar</button>
+          </div>
+
+          <!-- DataGridView para vendas relacionadas -->
+          <div class="data-grid">
+            <h3>Vendas Relacionadas</h3>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+              <ng-container matColumnDef="Vendas_Id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.Vendas_Id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="NF">
+                <th mat-header-cell *matHeaderCellDef> Nota Fiscal </th>
+                <td mat-cell *matCellDef="let element"> {{element.NF}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ClienteId">
+                <th mat-header-cell *matHeaderCellDef> ID do Cliente </th>
+                <td mat-cell *matCellDef="let element"> {{element.ClienteId}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="ValorDeVenda">
+                <th mat-header-cell *matHeaderCellDef> Valor da Venda </th>
+                <td mat-cell *matCellDef="let element"> {{element.ValorDeVenda}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Produtos_Nome">
+                <th mat-header-cell *matHeaderCellDef> Nome do Produto </th>
+                <td mat-cell *matCellDef="let element"> {{element.Produtos_Nome}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Produtos_Id">
+                <th mat-header-cell *matHeaderCellDef> ID do Produto </th>
+                <td mat-cell *matCellDef="let element"> {{element.Produtos_Id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Numero_Pedido">
+                <th mat-header-cell *matHeaderCellDef> Número do Pedido </th>
+                <td mat-cell *matCellDef="let element"> {{element.Numero_Pedido}} </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+</body>
+</html>
