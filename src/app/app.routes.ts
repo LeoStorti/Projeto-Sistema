@@ -1,3 +1,4 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { TelaDeLoginComponent } from './pages/tela-de-login/tela-de-login.component';
 import { FrmprincComponent } from './pages/frmprinc/frmprinc.component';
@@ -18,8 +19,7 @@ export const routes: Routes = [
   { path: 'frmfornecedorescadastro/:id', component: FrmFornecedoresCadastroComponent, canActivate: [AuthGuard] },
   { path: 'frmprodutoscadastro', component: FrmProdutosCadastroComponent, canActivate: [AuthGuard] },
   { path: 'frmprodutosconsulta', component: FrmProdutosConsultaComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '/frmfornecedoresconsulta' },
-
   { path: 'frmclientescadastro', component: FrmClientesCadastroComponent, canActivate: [AuthGuard] },
   { path: 'frmclientesconsulta', component: FrmClientesConsultaComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '/frmfornecedoresconsulta' }
 ];

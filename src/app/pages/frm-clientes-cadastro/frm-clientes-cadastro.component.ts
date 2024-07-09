@@ -42,12 +42,12 @@ export class FrmClientesCadastroComponent implements OnInit {
   clienteSelecionado: Clientes | null = null;
   clienteId: number = 0;
   cliente: any = {};
-  activeTabIndex = 1; // Definir a aba ativa como "Cadastro"
+  activeTabIndex = 2; // Definir a aba ativa como "Cadastro"
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -59,9 +59,15 @@ export class FrmClientesCadastroComponent implements OnInit {
       }
       // Definir a aba ativa com base no parâmetro de rota ou lógica específica
       this.activeTabIndex = this.clienteId ? 1 : 0;
+
+      // Adicionar verificação para garantir que vá para a segunda aba se não houver id
+      if (!this.clienteId) {
+        this.activeTabIndex = 1;
+      }
     });
     this.carregarTodosClientes();
   }
+
 
   carregarDadosCliente(id: number): void {
     console.log('Carregando dados do cliente com ID:', id); // Log para verificar a chamada da API
