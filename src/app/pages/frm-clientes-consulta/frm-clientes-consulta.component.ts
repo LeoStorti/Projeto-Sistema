@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { ClientesService } from '../../services/clientes.service';
 
 export interface Clientes {
-  ClienteId: number;
-  NomeCliente: string;
-  CNPJCliente: string;
-  EnderecoCliente: string;
-  TelefoneCliente: string;
+  clienteId: number;
+  nomeCliente: string;
+  cnpjCliente: string;
+  enderecoCliente: string;
+  telefoneCliente: string;
 }
 
 @Component({
@@ -37,7 +36,7 @@ export interface Clientes {
   styleUrls: ['./frm-clientes-consulta.component.css']
 })
 export class FrmClientesConsultaComponent implements OnInit {
-  displayedColumns: string[] = ['ClienteId', 'NomeCliente', 'CNPJCliente', 'EnderecoCliente','TelefoneCliente'];
+  displayedColumns: string[] = ['clienteId', 'nomeCliente', 'cnpjCliente', 'enderecoCliente', 'telefoneCliente'];
   dataSource = new MatTableDataSource<Clientes>();
   filtroNome: string = '';
   clientesSelecionado: Clientes | null = null;
@@ -61,9 +60,9 @@ export class FrmClientesConsultaComponent implements OnInit {
       });
   }
 
-  navigateToCadastro(clientesId: number): void {
-    console.log('Navigating to cadastro with clientesId:', clientesId);
-    this.router.navigate(['/frmclientescadastro', clientesId]);
+  navigateToCadastro(clienteId: number): void {
+    console.log('Navigating to cadastro with clienteId:', clienteId);
+    this.router.navigate(['/frmclientescadastro', clienteId]);
   }
 
   aplicarFiltro(): void {
@@ -91,7 +90,7 @@ export class FrmClientesConsultaComponent implements OnInit {
 
   excluirClienteSelecionado(): void {
     if (this.clientesSelecionado) {
-      const id = this.clientesSelecionado.ClienteId; // Ajuste para o campo ID correto
+      const id = this.clientesSelecionado.clienteId; // Ajuste para o campo ID correto
       this.clientesService.excluirClientes(id).subscribe(
         () => {
           console.log('Fornecedor excluído com sucesso.');

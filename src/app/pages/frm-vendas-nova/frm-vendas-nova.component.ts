@@ -8,17 +8,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClientesService, Clientes } from '../../services/clientes.service';
 
 export interface Vendas {
-  Vendas_Id: number;
-  NF: string;
-  ClienteId: string;
-  ValorDeVenda: string;
-  Produtos_Nome: string;
-  Produtos_Id: string;
-  Numero_Pedido: string;
+  vendas_Id: number;
+  nf: string;
+  clienteId: number;
+  valorDeVenda: string;
+  produtos_Nome: string;
+  produtos_Id: string;
+  numero_Pedido: string;
 }
 
 @Component({
@@ -31,6 +33,7 @@ export interface Vendas {
     MatTableModule,
     MatFormFieldModule,
     MatCheckboxModule,
+    MatSelectModule,
     CommonModule,
     FormsModule
   ],
@@ -38,50 +41,61 @@ export interface Vendas {
   styleUrls: ['./frm-vendas-nova.component.css']
 })
 export class FrmVendasNovaComponent implements OnInit {
-  displayedColumns: string[] = ['Vendas_Id', 'NF', 'ClienteId', 'ValorDeVenda', 'Produtos_Nome', 'Produtos_Id', 'Numero_Pedido'];
+  displayedColumns: string[] = ['clienteId', 'nomeCliente', 'cnpjCliente', 'enderecoCliente','telefoneCliente'];
   dataSource = new MatTableDataSource<Vendas>();
-  venda: Vendas = { Vendas_Id: 0, NF: '', ClienteId: '', ValorDeVenda: '', Produtos_Nome: '', Produtos_Id: '', Numero_Pedido: '' };
-  activeTabIndex = 1; // Definir a aba ativa como "Cadastro"
+  venda: Vendas = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos_Nome: '', produtos_Id: '', numero_Pedido: '' };
+  activeTabIndex = 1;
+  clientes: Clientes[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private clientesService: ClientesService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      // Definir a aba ativa com base no parâmetro de rota ou lógica específica
       this.activeTabIndex = 1;
     });
     this.carregarTodasVendas();
+    this.carregarClientes();
   }
 
   carregarTodasVendas(): void {
-    console.log('Carregando todas as vendas'); // Log para verificar a chamada da API
-    this.http.get<Vendas[]>(`https://localhost:7219/api/vendas`).subscribe((data: Vendas[]) => {
-      console.log('Todas as vendas carregadas:', data); // Log para verificar os dados carregados
+    this.http.get<Vendas[]>('https://localhost:7219/api/vendas').subscribe((data: Vendas[]) => {
       this.dataSource.data = data;
     }, error => {
       console.error('Erro ao carregar todas as vendas', error);
-      // Adicione qualquer lógica de tratamento de erro aqui, se necessário
+    });
+  }
+
+  carregarClientes(): void {
+    this.clientesService.getClientes().subscribe((data: Clientes[]) => {
+      console.log('Clientes carregados:', data); // Log dos dados recebidos
+      this.clientes = data;
+
+      // Logar cada cliente individualmente para inspeção
+      this.clientes.forEach(cliente => {
+        console.log('clienteId:', cliente.clienteId, 'nomeCliente:', cliente.nomeCliente);
+      });
+
+    }, error => {
+      console.error('Erro ao carregar clientes', error);
     });
   }
 
   salvarVenda(): void {
-    console.log('Salvando venda:', this.venda); // Log para verificar os dados a serem salvos
-    this.http.post(`https://localhost:7219/api/vendas`, this.venda).subscribe(response => {
-      console.log('Venda salva com sucesso:', response); // Log para verificar a resposta da API
-      this.carregarTodasVendas(); // Atualizar a lista de vendas após salvar
-      this.cancelar(); // Limpar o formulário após salvar
+    this.http.post('https://localhost:7219/api/vendas', this.venda).subscribe(response => {
+      this.carregarTodasVendas();
+      this.cancelar();
     }, error => {
       console.error('Erro ao salvar venda', error);
-      // Adicione qualquer lógica de tratamento de erro aqui, se necessário
     });
   }
 
   cancelar(): void {
-    this.venda = { Vendas_Id: 0, NF: '', ClienteId: '', ValorDeVenda: '', Produtos_Nome: '', Produtos_Id: '', Numero_Pedido: '' };
+    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos_Nome: '', produtos_Id: '', numero_Pedido: '' };
   }
 
   onTabChange(event: any): void {

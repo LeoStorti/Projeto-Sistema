@@ -3,11 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Clientes {
-  ClienteId: number;
-  NomeCliente: string;
-  CNPJCliente: string;
-  EnderecoCliente: string;
-  TelefoneCliente: string;
+  clienteId: number;
+  nomeCliente: string;
+  cnpjCliente: string;
+  enderecoCliente: string;
+  telefoneCliente: string;
 }
 
 // export interface Produto {
