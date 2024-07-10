@@ -17,12 +17,27 @@
           </mat-form-field>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngFor="let produto of venda.produtos; let i = index">
           <mat-form-field appearance="outline">
             <mat-label>Nome do Produto</mat-label>
-            <input matInput id="produtosNome" placeholder="Digite o nome do produto" [(ngModel)]="venda.produtos_Nome">
+            <mat-select [(ngModel)]="produtoSelecionado" (selectionChange)="selecionarProduto($event.value)">
+              <mat-option *ngFor="let p of produtosDisponiveis" [value]="p">
+                {{ p.nome }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Preço do Produto</mat-label>
+            <input matInput [(ngModel)]="produto.preco" placeholder="Preço do produto" disabled>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Quantidade do Produto</mat-label>
+            <input matInput type="number" [(ngModel)]="produto.quantidade" placeholder="Digite a quantidade do produto">
+          </mat-form-field>
+          <button mat-raised-button color="warn" (click)="removerProduto(i)">Remover Produto</button>
         </div>
+
+        <button mat-raised-button color="primary" (click)="adicionarProduto()">Adicionar Produto</button>
 
         <!-- Botões para cancelar e salvar -->
         <div class="action-buttons">

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,14 +11,22 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientesService, Clientes } from '../../services/clientes.service';
+import { MatButtonModule } from '@angular/material/button';
 
-export interface Vendas {
+
+export interface Produto {
+  nome: string;
+  preco: number;
+  quantidade: number;
+  ValorDeVenda?: number; // Adicionado campo valorVenda
+}
+
+export interface Venda {
   vendas_Id: number;
   nf: string;
   clienteId: number;
   valorDeVenda: string;
-  produtos_Nome: string;
-  produtos_Id: string;
+  produtos: Produto[];
   numero_Pedido: string;
 }
 
@@ -40,12 +47,15 @@ export interface Vendas {
   templateUrl: './frm-vendas-nova.component.html',
   styleUrls: ['./frm-vendas-nova.component.css']
 })
+
 export class FrmVendasNovaComponent implements OnInit {
-  displayedColumns: string[] = ['clienteId', 'nomeCliente', 'cnpjCliente', 'enderecoCliente','telefoneCliente'];
-  dataSource = new MatTableDataSource<Vendas>();
-  venda: Vendas = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos_Nome: '', produtos_Id: '', numero_Pedido: '' };
+  displayedColumns: string[] = ['clienteId', 'nomeCliente', 'cnpjCliente', 'enderecoCliente', 'telefoneCliente'];
+  dataSource = new MatTableDataSource<Venda>();
+  venda: Venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' }; // Inicializado produtos como um array vazio
   activeTabIndex = 1;
   clientes: Clientes[] = [];
+  produtosDisponiveis: Produto[] = [];
+  produtoSelecionado: Produto | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,14 +66,15 @@ export class FrmVendasNovaComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.activeTabIndex = 1;
+      this.activeTabIndex = params.has('id') ? 1 : 0; // Define o índice da aba ativa com base na presença do parâmetro 'id'
     });
     this.carregarTodasVendas();
     this.carregarClientes();
+    this.carregarProdutosDisponiveis();
   }
 
   carregarTodasVendas(): void {
-    this.http.get<Vendas[]>('https://localhost:7219/api/vendas').subscribe((data: Vendas[]) => {
+    this.http.get<Venda[]>('https://localhost:7219/api/vendas').subscribe((data: Venda[]) => {
       this.dataSource.data = data;
     }, error => {
       console.error('Erro ao carregar todas as vendas', error);
@@ -85,6 +96,18 @@ export class FrmVendasNovaComponent implements OnInit {
     });
   }
 
+  carregarProdutosDisponiveis(): void {
+    this.http.get<Produto[]>('https://localhost:7219/api/produtos').subscribe((data: Produto[]) => {
+      this.produtosDisponiveis = data;
+    }, error => {
+      console.error('Erro ao carregar produtos disponíveis', error);
+    });
+  }
+
+  selecionarProduto(produto: Produto): void {
+    this.produtoSelecionado = produto;
+  }
+
   salvarVenda(): void {
     this.http.post('https://localhost:7219/api/vendas', this.venda).subscribe(response => {
       this.carregarTodasVendas();
@@ -95,7 +118,7 @@ export class FrmVendasNovaComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos_Nome: '', produtos_Id: '', numero_Pedido: '' };
+    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' }; // Resetar produtos como um array vazio
   }
 
   onTabChange(event: any): void {
@@ -105,5 +128,13 @@ export class FrmVendasNovaComponent implements OnInit {
     } else if (tabLabel === 'Cadastro') {
       this.router.navigate(['/frmvendasnova']);
     }
+  }
+
+  adicionarProduto(): void {
+    this.venda.produtos.push({ nome: '', preco: 0, quantidade: 0 });
+  }
+
+  removerProduto(index: number): void {
+    this.venda.produtos.splice(index, 1);
   }
 }
