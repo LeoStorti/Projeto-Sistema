@@ -21,3 +21,11 @@
 .data-grid {
   margin-top: 2rem;
 }
+
+.mat-option-text {
+  color: black; /* ou a cor desejada para o texto das opções */
+}
+
+.mat-select-value-text {
+  color: black; /* ou a cor desejada para o texto selecionado */
+}

@@ -1,4 +1,3 @@
-<!-- src/app/components/frm-produtos-consulta/frm-produtos-consulta.component.html -->
 <div class="tabcontrol">
   <mat-tab-group (selectedTabChange)="onTabChange($event)">
     <mat-tab label="Consulta" active>
@@ -9,8 +8,8 @@
             <mat-label>Digite o nome do produto</mat-label>
             <input matInput type="text" placeholder="Nome do produto" [(ngModel)]="filtroNome">
           </mat-form-field>
-          <button mat-raised-button color="primary" (dblclick)="aplicarFiltro()">Pesquisar</button>
-          <button mat-raised-button color="warn" (dblclick)="limparFiltro()">Limpar</button>
+          <button mat-raised-button color="primary" (click)="aplicarFiltro()">Pesquisar</button>
+          <button mat-raised-button color="warn" (click)="limparFiltro()">Limpar</button>
         </div>
 
         <div class="data-grid">
@@ -35,6 +34,16 @@
               <td mat-cell *matCellDef="let element"> {{element.quantidade}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="valorDeCompra">
+              <th mat-header-cell *matHeaderCellDef> Valor de Compra </th>
+              <td mat-cell *matCellDef="let element"> {{element.valorDeCompra | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="valorDeVenda">
+              <th mat-header-cell *matHeaderCellDef> Valor de Venda </th>
+              <td mat-cell *matCellDef="let element"> {{element.valorDeVenda | currency}} </td>
+            </ng-container>
+
             <!-- Alteração para clique na linha -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"
@@ -45,8 +54,8 @@
 
         <!-- Botões de ação -->
         <div class="action-buttons">
-          <button mat-raised-button color="warn"(click)="excluirProdutoSelecionado()">Excluir</button>
-          <button mat-raised-button color="accent">Novo</button>
+          <button mat-raised-button color="warn" (click)="excluirProdutoSelecionado()">Excluir</button>
+          <button mat-raised-button color="accent" (click)="navigateToCadastro()">Novo</button>
         </div>
       </div>
     </mat-tab>

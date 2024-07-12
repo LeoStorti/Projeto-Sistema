@@ -23,12 +23,16 @@ import { ProdutosService, Produto } from '../../services/produtos.service';
   styleUrls: ['./frm-produtos-cadastro.component.css']
 })
 export class FrmProdutosCadastroComponent implements OnInit {
-  produto: Produto = {
-    productId: 0,
-    nomeProduto: '',
-    fornecedor: '',
-    quantidade: 0
-  };
+    produto: Produto = {
+      productId: 0,
+      nomeProduto: '',
+      fornecedor: '',
+      quantidade: 0,
+      valorDeVenda: 0,
+      valorDeCompra: 0,
+      nome: undefined,
+      Produto: undefined
+    };
   fornecedorId!: number;
 
   constructor(

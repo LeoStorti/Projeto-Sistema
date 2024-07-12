@@ -3,41 +3,52 @@
     <mat-tab label="Consulta">
       <!-- Conteúdo da aba de consulta -->
     </mat-tab>
-    <mat-tab label="Cadastro">
+    <mat-tab label="Novo Pedido">
       <!-- Conteúdo da aba de cadastro -->
       <div class="cadastro">
         <div class="form-group">
           <mat-form-field appearance="outline">
-            <mat-label>ID do Cliente</mat-label>
-            <mat-select [(ngModel)]="venda.clienteId" name="clienteId">
-              <mat-option *ngFor="let cliente of clientes" [value]="cliente.clienteId">
-                {{ cliente.clienteId || 'N/A' }} - {{ cliente.nomeCliente || 'Nome não disponível' }}
+            <mat-label>Nome do Cliente</mat-label>
+            <mat-select [(ngModel)]="clienteSelecionado" (selectionChange)="selecionarCliente($event.value)">
+              <mat-option *ngFor="let c of clientes" [value]="c">
+                {{ c.nomeCliente }}
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </div>
 
-        <div class="form-group" *ngFor="let produto of venda.produtos; let i = index">
+          <div *ngIf="clienteSelecionado">
+            <mat-form-field appearance="outline">
+              <mat-label>Cliente ID</mat-label>
+              <input matInput [(ngModel)]="clienteSelecionado.clienteId" placeholder="Cliente ID" disabled>
+            </mat-form-field>
+          </div>
+
           <mat-form-field appearance="outline">
             <mat-label>Nome do Produto</mat-label>
             <mat-select [(ngModel)]="produtoSelecionado" (selectionChange)="selecionarProduto($event.value)">
               <mat-option *ngFor="let p of produtosDisponiveis" [value]="p">
-                {{ p.nome }}
+                {{ p.nomeProduto }}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Preço do Produto</mat-label>
-            <input matInput [(ngModel)]="produto.preco" placeholder="Preço do produto" disabled>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Quantidade do Produto</mat-label>
-            <input matInput type="number" [(ngModel)]="produto.quantidade" placeholder="Digite a quantidade do produto">
-          </mat-form-field>
-          <button mat-raised-button color="warn" (click)="removerProduto(i)">Remover Produto</button>
-        </div>
 
-        <button mat-raised-button color="primary" (click)="adicionarProduto()">Adicionar Produto</button>
+          <div *ngIf="produtoSelecionado">
+            <mat-form-field appearance="outline">
+              <mat-label>Quantidade do Produto</mat-label>
+              <input matInput type="number" [(ngModel)]="produtoSelecionado.quantidade" placeholder="Digite a quantidade do produto">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Valor de Venda</mat-label>
+              <input matInput [(ngModel)]="produtoSelecionado.valorDeVenda" placeholder="Valor de venda" disabled>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Product ID</mat-label>
+              <input matInput [(ngModel)]="produtoSelecionado.productId" placeholder="Product ID" disabled>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button color="primary" (click)="adicionarProduto()">Adicionar Produto</button>
+        </div>
 
         <!-- Botões para cancelar e salvar -->
         <div class="action-buttons">

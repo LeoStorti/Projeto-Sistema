@@ -1,4 +1,3 @@
-<!-- src/app/components/frm-produtos-cadastro/frm-produtos-cadastro.component.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,7 +10,6 @@
     <mat-tab-group (selectedTabChange)="onTabChange($event)">
       <mat-tab label="Consulta">
         <!-- Conteúdo da aba de consulta -->
-        <!-- Adicione o conteúdo da consulta aqui -->
       </mat-tab>
       <mat-tab label="Cadastro" active>
         <!-- Conteúdo da aba de cadastro -->
@@ -35,6 +33,20 @@
               <mat-form-field appearance="outline">
                 <mat-label>Quantidade</mat-label>
                 <input matInput id="quantidade" type="number" min="0" placeholder="Digite a quantidade" [(ngModel)]="produto.quantidade" name="quantidade" required>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Valor de Compra</mat-label>
+                <input matInput id="valor-de-compra" type="number" min="0" placeholder="Digite o valor de compra" [(ngModel)]="produto.valorDeCompra" name="valorDeCompra" required>
+              </mat-form-field>
+            </div>
+
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Valor de Venda</mat-label>
+                <input matInput id="valor-de-venda" type="number" min="0" placeholder="Digite o valor de venda" [(ngModel)]="produto.valorDeVenda" name="valorDeVenda" required>
               </mat-form-field>
             </div>
 

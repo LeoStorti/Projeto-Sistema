@@ -11,14 +11,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientesService, Clientes } from '../../services/clientes.service';
+import { ProdutosService, Produto } from '../../services/produtos.service';
 import { MatButtonModule } from '@angular/material/button';
 
-
-export interface Produto {
-  nome: string;
-  preco: number;
+export interface ProdutoVenda {
+  nomeProduto: string;
   quantidade: number;
-  ValorDeVenda?: number; // Adicionado campo valorVenda
+  valorDeVenda?: number;
+  productId?: number;
 }
 
 export interface Venda {
@@ -26,7 +26,7 @@ export interface Venda {
   nf: string;
   clienteId: number;
   valorDeVenda: string;
-  produtos: Produto[];
+  produtos: ProdutoVenda[];
   numero_Pedido: string;
 }
 
@@ -47,27 +47,29 @@ export interface Venda {
   templateUrl: './frm-vendas-nova.component.html',
   styleUrls: ['./frm-vendas-nova.component.css']
 })
-
 export class FrmVendasNovaComponent implements OnInit {
   displayedColumns: string[] = ['clienteId', 'nomeCliente', 'cnpjCliente', 'enderecoCliente', 'telefoneCliente'];
   dataSource = new MatTableDataSource<Venda>();
-  venda: Venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' }; // Inicializado produtos como um array vazio
+  venda: Venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' };
   activeTabIndex = 1;
   clientes: Clientes[] = [];
   produtosDisponiveis: Produto[] = [];
+  clienteSelecionado: Clientes | undefined;
   produtoSelecionado: Produto | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private clientesService: ClientesService
+    private clientesService: ClientesService,
+    private produtosService: ProdutosService
   ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.activeTabIndex = params.has('id') ? 1 : 0; // Define o índice da aba ativa com base na presença do parâmetro 'id'
+      this.activeTabIndex = params.has('id') ? 1 : 0;
     });
+    this.activeTabIndex = 1;
     this.carregarTodasVendas();
     this.carregarClientes();
     this.carregarProdutosDisponiveis();
@@ -83,25 +85,24 @@ export class FrmVendasNovaComponent implements OnInit {
 
   carregarClientes(): void {
     this.clientesService.getClientes().subscribe((data: Clientes[]) => {
-      console.log('Clientes carregados:', data); // Log dos dados recebidos
+      console.log('Clientes carregados:', data);
       this.clientes = data;
-
-      // Logar cada cliente individualmente para inspeção
-      this.clientes.forEach(cliente => {
-        console.log('clienteId:', cliente.clienteId, 'nomeCliente:', cliente.nomeCliente);
-      });
-
     }, error => {
       console.error('Erro ao carregar clientes', error);
     });
   }
 
   carregarProdutosDisponiveis(): void {
-    this.http.get<Produto[]>('https://localhost:7219/api/produtos').subscribe((data: Produto[]) => {
+    this.produtosService.getProdutos().subscribe((data: Produto[]) => {
       this.produtosDisponiveis = data;
     }, error => {
       console.error('Erro ao carregar produtos disponíveis', error);
     });
+  }
+
+  selecionarCliente(cliente: Clientes): void {
+    this.clienteSelecionado = cliente;
+    this.venda.clienteId = cliente.clienteId;  // Atualiza o clienteId da venda
   }
 
   selecionarProduto(produto: Produto): void {
@@ -118,7 +119,7 @@ export class FrmVendasNovaComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' }; // Resetar produtos como um array vazio
+    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' };
   }
 
   onTabChange(event: any): void {
@@ -131,7 +132,14 @@ export class FrmVendasNovaComponent implements OnInit {
   }
 
   adicionarProduto(): void {
-    this.venda.produtos.push({ nome: '', preco: 0, quantidade: 0 });
+    if (this.produtoSelecionado) {
+      this.venda.produtos.push({
+        nomeProduto: this.produtoSelecionado.nomeProduto,
+        quantidade: this.produtoSelecionado.quantidade,
+        valorDeVenda: this.produtoSelecionado.valorDeVenda,
+        productId: this.produtoSelecionado.productId
+      });
+    }
   }
 
   removerProduto(index: number): void {

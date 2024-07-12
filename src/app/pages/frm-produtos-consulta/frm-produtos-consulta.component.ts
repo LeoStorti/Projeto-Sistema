@@ -1,4 +1,3 @@
-// src/app/components/frm-produtos-consulta/frm-produtos-consulta.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -29,16 +28,11 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './frm-produtos-consulta.component.html',
   styleUrls: ['./frm-produtos-consulta.component.css']
 })
-
 export class FrmProdutosConsultaComponent implements OnInit {
-navigateToCadastro(arg0: any) {
-throw new Error('Method not implemented.');
-}
-  displayedColumns: string[] = ['productId', 'nomeProduto', 'fornecedor', 'quantidade'];
+  displayedColumns: string[] = ['productId', 'nomeProduto', 'fornecedor', 'quantidade', 'valorDeCompra', 'valorDeVenda'];
   dataSource = new MatTableDataSource<Produto>();
   filtroNome: string = '';
   registroSelecionado: Produto | null = null;
-
 
   constructor(private router: Router, private produtosService: ProdutosService, private http: HttpClient) {}
 
@@ -54,6 +48,7 @@ throw new Error('Method not implemented.');
       this.router.navigate(['/frmprodutosconsulta']);
     }
   }
+
   aplicarFiltro() {
     if (!this.filtroNome) {
       this.carregarProdutos(); // Mostrar todos os produtos se o filtro estiver vazio
@@ -62,7 +57,6 @@ throw new Error('Method not implemented.');
 
     // Filtrar os produtos pelo nome localmente (opcional)
     this.dataSource.filter = this.filtroNome.trim().toLowerCase();
-
   }
 
   limparFiltro() {
@@ -78,6 +72,7 @@ throw new Error('Method not implemented.');
         console.error('Erro ao carregar produtos', error);
       });
   }
+
   selecionarRegistro(registro: Produto) {
     this.registroSelecionado = registro;
     // Implemente a lógica de ação ao selecionar, se necessário
@@ -99,5 +94,9 @@ throw new Error('Method not implemented.');
     } else {
       console.warn('Nenhum produto selecionado para excluir.');
     }
+  }
+
+  navigateToCadastro() {
+    this.router.navigate(['/frmprodutoscadastro']);
   }
 }
