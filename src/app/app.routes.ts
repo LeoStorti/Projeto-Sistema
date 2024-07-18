@@ -11,6 +11,8 @@ import { FrmClientesCadastroComponent } from './pages/frm-clientes-cadastro/frm-
 import { FrmClientesConsultaComponent } from './pages/frm-clientes-consulta/frm-clientes-consulta.component';
 import { FrmVendasConsultaComponent } from './pages/frm-vendas-consulta/frm-vendas-consulta.component';
 import { FrmVendasNovaComponent } from './pages/frm-vendas-nova/frm-vendas-nova.component';
+import { FrmComprasNovaComponent } from './pages/frm-compras-nova/frm-compras-nova.component';
+import { FrmComprasConsultaComponent } from './pages/frm-compras-consulta/frm-compras-consulta.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/frmfornecedoresconsulta', pathMatch: 'full' },
@@ -25,5 +27,7 @@ export const routes: Routes = [
   { path: 'frmclientesconsulta', component: FrmClientesConsultaComponent, canActivate: [AuthGuard] },
   { path: 'frmvendasconsulta', component: FrmVendasConsultaComponent, canActivate: [AuthGuard] },
   { path: 'frmvendasnova', component: FrmVendasNovaComponent, canActivate: [AuthGuard] },
+  { path: 'frmcomprasnova', component: FrmComprasNovaComponent, canActivate: [AuthGuard] },
+  { path: 'frmcomprasconsulta', component: FrmComprasConsultaComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/frmfornecedoresconsulta' },
 ];

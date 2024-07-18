@@ -11,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 export interface Produto {
+  valorDeVenda: number;
+  valorDeCompra: number;
   productId: number;
   nomeProduto: string;
   fornecedor: string;

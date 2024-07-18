@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Produto } from './produtos.service';
 
 export interface Fornecedor {
+nomeFornecedor: any;
+  fornecedor_Id: number;
   id: number;
   nome: string;
   contato: string;
   endereco: string;
-}
-
-export interface Produto {
-  id: number;
-  nome: string;
-  quantidade: number;
+  valorDeVenda: number;
+  valorDeCompra: number;
 }
 
 @Injectable({
@@ -20,6 +19,7 @@ export interface Produto {
 })
 export class FornecedorService {
   private apiUrl = 'https://localhost:7219/api'; // Substitua pelo caminho correto da sua API
+  nomeFornecedor: any;
 
   constructor(private http: HttpClient) {}
 

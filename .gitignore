@@ -40,3 +40,14 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+src/app/app.routes.ts
+src/app/pages/frm-compras-consulta/frm-compras-consulta.component.css
+src/app/pages/frm-compras-consulta/frm-compras-consulta.component.html
+src/app/pages/frm-compras-consulta/frm-compras-consulta.component.spec.ts
+src/app/pages/frm-compras-consulta/frm-compras-consulta.component.ts
+src/app/pages/frm-compras-nova/frm-compras-nova.component.css
+src/app/pages/frm-compras-nova/frm-compras-nova.component.html
+src/app/pages/frm-compras-nova/frm-compras-nova.component.spec.ts
+src/app/pages/frm-compras-nova/frm-compras-nova.component.ts
+src/app/app.routes.ts
+*.ts
