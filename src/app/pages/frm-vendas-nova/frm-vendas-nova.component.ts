@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatInputModule } from '@angular/material/input';
@@ -15,8 +15,7 @@ import { ProdutosService, Produto } from '../../services/produtos.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-export interface ProdutoVenda {
+export interface Itens_Venda {
   nomeProduto: string;
   quantidade: number;
   valorUnitario: number;
@@ -26,11 +25,8 @@ export interface ProdutoVenda {
 
 export interface Venda {
   vendas_Id: number;
-  nf: string;
   clienteId: number;
-  valorDeVenda: string;
-  produtos: ProdutoVenda[];
-  numero_Pedido: string;
+  itens_Venda: Itens_Venda[];
 }
 
 @Component({
@@ -52,13 +48,13 @@ export interface Venda {
 })
 export class FrmVendasNovaComponent implements OnInit {
   displayedColumns: string[] = ['nomeProduto', 'quantidade', 'valorUnitario', 'actions'];
-  dataSource = new MatTableDataSource<ProdutoVenda>();
-  venda: Venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' };
+  dataSource = new MatTableDataSource<Itens_Venda>();
+  venda: Venda = { vendas_Id: 0, clienteId: 0, itens_Venda: [] }; // Atualize para `itens_Venda`
   activeTabIndex = 1;
   clientes: Clientes[] = [];
   produtosDisponiveis: Produto[] = [];
   clienteSelecionado: Clientes | undefined;
-  produtoSelecionado: ProdutoVenda | undefined;
+  produtoSelecionado: Itens_Venda | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -110,83 +106,56 @@ export class FrmVendasNovaComponent implements OnInit {
 
   adicionarProduto(): void {
     if (this.produtoSelecionado) {
-      this.venda.produtos.push({ ...this.produtoSelecionado });
-      this.dataSource.data = [...this.venda.produtos];
+      this.venda.itens_Venda.push({ ...this.produtoSelecionado });
+      this.dataSource.data = [...this.venda.itens_Venda];
       this.produtoSelecionado = undefined; // Limpar o produto selecionado após adicionar à lista
     }
   }
 
   removerProduto(index: number): void {
-    this.venda.produtos.splice(index, 1);
-    this.dataSource.data = this.venda.produtos;
+    this.venda.itens_Venda.splice(index, 1);
+    this.dataSource.data = this.venda.itens_Venda;
   }
 
-  // Adicione uma função para verificar o estoque disponível antes de salvar a venda
-verificarEstoqueDisponivel(): boolean {
-  for (const produto of this.venda.produtos) {
-    const produtoDisponivel = this.produtosDisponiveis.find(p => p.productId === produto.productId);
-    if (produtoDisponivel && produto.quantidade > produtoDisponivel.quantidade) {
-      alert(`A quantidade solicitada para o produto ${produto.nomeProduto} é maior que o disponível no estoque.`);
-      return false;
-    }
-  }
-  return true;
-}
-
-async salvarVenda(): Promise<void> {
-  let hasError = false;
-
-  try {
-    // Itera sobre cada produto na venda
-    for (const produto of this.venda.produtos) {
-      const response = await this.http.get(`https://localhost:7219/api/produtos/${produto.productId}`).toPromise();
-      const produtoEmEstoque = response as Produto;
-
-      if (produtoEmEstoque.quantidade < produto.quantidade) {
-        hasError = true;
-        const mensagemErro = `A quantidade solicitada para o produto ${produto.nomeProduto} é maior que o disponível no estoque. A quantidade atual para esse produto é ${produtoEmEstoque.quantidade}.`;
-        this.snackBar.open(mensagemErro, 'Fechar', { duration: 5000 }); // Exibir mensagem de snackbar
-      }
-    }
-
-    if (!hasError) {
-      // Continua com a lógica para salvar a venda
-      for (const produto of this.venda.produtos) {
-        const novaVenda = {
-          vendas_Id: this.venda.vendas_Id,
-          nf: this.venda.nf,
-          clienteId: this.venda.clienteId,
-          produtos_Nome: produto.nomeProduto,
-          quantidade: produto.quantidade, // Inclua a quantidade aqui
+  async salvarVenda(): Promise<void> {
+    try {
+      const novaVenda = {
+        vendas_Id: this.venda.vendas_Id,
+        clienteId: this.venda.clienteId,
+        itens_Venda: this.venda.itens_Venda.map(produto => ({
+          produtoId: produto.productId,
+          quantidade: produto.quantidade,
           valorDeVenda: produto.valorDeVenda
-        };
+        }))
+      };
 
-        const response = await this.http.post('https://localhost:7219/api/vendas', novaVenda).toPromise();
-        console.log('Venda salva com sucesso', response);
+      const response = await this.http.post('https://localhost:7219/api/vendas', novaVenda).toPromise();
+      console.log('Venda salva com sucesso', response);
+
+      this.snackBar.open('Venda salva com sucesso!', 'Fechar', { duration: 5000 });
+      this.cancelar();
+    } catch (error) {
+      console.error('Erro ao salvar venda:', error);
+
+      if (error instanceof HttpErrorResponse && error.status === 400 && error.error && error.error.errors) {
+        const validationErrors = error.error.errors;
+        for (const key in validationErrors) {
+          if (validationErrors.hasOwnProperty(key)) {
+            this.snackBar.open(validationErrors[key], 'Fechar', { duration: 5000 });
+          }
+        }
+      } else {
+        this.snackBar.open('Erro ao salvar a venda. Tente novamente.', 'Fechar', { duration: 5000 });
       }
-
-      this.cancelar(); // Finaliza o processo de venda
     }
-  } catch (error) {
-    hasError = true;
-    console.error('Erro ao processar venda:', error);
-    this.snackBar.open('Erro ao processar venda.', 'Fechar', { duration: 5000 }); // Exibir mensagem de erro ao salvar a venda
   }
-}
-
 
 
   cancelar(): void {
-    this.venda = { vendas_Id: 0, nf: '', clienteId: 0, valorDeVenda: '', produtos: [], numero_Pedido: '' };
-    this.dataSource.data = this.venda.produtos;
+    this.router.navigate(['/frmclientescadastro']);
   }
 
   onTabChange(event: any): void {
-    const tabLabel = event.tab.textLabel;
-    if (tabLabel === 'Consulta') {
-      this.router.navigate(['/frmvendasconsulta']);
-    } else if (tabLabel === 'Cadastro') {
-      this.router.navigate(['/frmvendasnova']);
-    }
+    this.activeTabIndex = event.index;
   }
 }
