@@ -1,4 +1,32 @@
 /* src/app/components/frm-fornecedores-cadastro/frm-fornecedores-cadastro.component.css */
+.header {
+  background-color: #3f51b5;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  font-size: 1.2rem;
+}
+
+.header .header-left {
+  display: flex;
+  gap: 1rem;
+}
+
+.header .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header .user-info {
+  font-size: 14px;
+}
+
+.header .session-info {
+  font-size: 14px;
+}
+
 .tabcontrol {
   margin: 2rem;
 }
@@ -7,9 +35,14 @@
   padding: 1rem;
 }
 
-.form-group,
+.form-group {
+  margin-bottom: 1rem;
+}
+
 .form-group-inline {
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .action-buttons {
@@ -20,4 +53,12 @@
 
 .data-grid {
   margin-top: 2rem;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-checkbox {
+  margin-left: 1rem;
 }

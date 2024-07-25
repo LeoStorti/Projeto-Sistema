@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ProdutosService } from '../../services/produtos.service';
+import { AuthService } from '../../services/auth.service';
 import { Produto } from '../../services/produtos.service';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -33,11 +34,20 @@ export class FrmProdutosConsultaComponent implements OnInit {
   dataSource = new MatTableDataSource<Produto>();
   filtroNome: string = '';
   registroSelecionado: Produto | null = null;
+  userName: string = '';
+  loginTime: string = '';
 
-  constructor(private router: Router, private produtosService: ProdutosService, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private produtosService: ProdutosService,
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.carregarProdutos();
+    this.userName = this.authService.getLogin() || 'Usuário Desconhecido';
+    this.loginTime = this.authService.getSessionDuration();
   }
 
   onTabChange(event: any) {

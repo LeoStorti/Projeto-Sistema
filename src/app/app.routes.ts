@@ -29,5 +29,5 @@ export const routes: Routes = [
   { path: 'frmvendasnova', component: FrmVendasNovaComponent, canActivate: [AuthGuard] },
   { path: 'frmcomprasnova', component: FrmComprasNovaComponent, canActivate: [AuthGuard] },
   { path: 'frmcomprasconsulta', component: FrmComprasConsultaComponent, canActivate: [AuthGuard] },
-  { path: '**', redirectTo: '/frmfornecedoresconsulta' },
+  { path: '**', redirectTo: '/login' },
 ];

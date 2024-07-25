@@ -1,21 +1,38 @@
-/* src/app/components/frm-fornecedores-consulta/frm-fornecedores-consulta.component.css */
+.header {
+  background-color: #3f51b5; /* Cor de fundo */
+  color: white; /* Cor do texto */
+  padding: 1rem;
+  text-align: center;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  position: relative; /* Para posicionar a informação do usuário */
+}
+
+.header .user-info {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  font-size: 14px; /* Ajuste o tamanho da fonte do nome do usuário e hora conforme necessário */
+}
+
 .tabcontrol {
   margin: 2rem;
 }
 
 .consulta {
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.mat-form-field {
-  flex: 1;
+  gap: 16px;
 }
 
 .data-grid {
@@ -24,14 +41,15 @@
 
 .action-buttons {
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 16px;
 }
 
-td:hover {
-  background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
-  cursor: pointer; /* Cursor de mãozinha */
+.mat-option-text {
+  color: black; /* ou a cor desejada para o texto das opções */
 }
-.selecionado {
-  background-color: #f0f0f0; /* Cor de fundo quando selecionado */
+
+.mat-select-value-text {
+  color: black; /* ou a cor desejada para o texto selecionado */
 }

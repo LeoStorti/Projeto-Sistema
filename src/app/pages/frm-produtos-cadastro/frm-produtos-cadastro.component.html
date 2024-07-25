@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Cadastro de Produtos</title>
-  <link rel="stylesheet" href="frm-produtos-cadastro.component.css">
+  <div class="header-left">
+    <h1>Cadastro de Produtos</h1>
+  </div>
 </head>
 <body>
+  <div class="navbar">
+    <div class="navbar-menu-left">
+    </div>
+    <div class="navbar-user-info">
+      <span>Usuário: {{ authService.getUserName() }}</span>
+      <span>Tempo de Sessão: {{ authService.getSessionDuration() }}</span>
+    </div>
+  </div>
+
   <div class="tabcontrol">
     <mat-tab-group (selectedTabChange)="onTabChange($event)">
       <mat-tab label="Consulta">
@@ -15,6 +24,7 @@
         <!-- Conteúdo da aba de cadastro -->
         <div class="cadastro">
           <form #produtoForm="ngForm" (ngSubmit)="salvarProduto()">
+            <!-- Campos do formulário -->
             <div class="form-group">
               <mat-form-field appearance="outline">
                 <mat-label>Nome do Produto</mat-label>

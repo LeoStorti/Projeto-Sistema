@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProdutosService, Produto } from '../../services/produtos.service';
+import { AuthService } from '../../services/auth.service'; // Importe o AuthService
 
 @Component({
   selector: 'app-frm-produtos-cadastro',
@@ -38,7 +39,8 @@ export class FrmProdutosCadastroComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private produtosService: ProdutosService
+    private produtosService: ProdutosService,
+    public authService: AuthService // Injete o AuthService
   ) {}
 
   ngOnInit(): void {

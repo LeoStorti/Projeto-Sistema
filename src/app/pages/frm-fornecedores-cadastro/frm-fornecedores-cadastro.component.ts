@@ -9,8 +9,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service'; // Importe o AuthService
 
 export interface Produto {
+  id: number | undefined;
   valorDeVenda: number;
   valorDeCompra: number;
   productId: number;
@@ -41,12 +43,15 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
   produtos: Produto[] = [];
   displayedColumns: string[] = ['productId', 'nomeProduto', 'fornecedor', 'quantidade'];
   activeTabIndex = 1; // Definir a aba ativa como "Cadastro"
-
+  userName: string = '';
+  loginTime: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    public authService: AuthService // Injete o AuthService
+
   ) {}
 
   ngOnInit(): void {
@@ -75,11 +80,9 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
         console.log('Produtos filtrados:', this.produtos); // Log para verificar os produtos filtrados
       }, error => {
         console.error('Erro ao carregar todos os produtos', error);
-        // Adicione qualquer lógica de tratamento de erro aqui, se necessário
       });
     }, error => {
       console.error('Erro ao carregar dados do fornecedor', error);
-      // Adicione qualquer lógica de tratamento de erro aqui, se necessário
     });
   }
 
@@ -90,7 +93,6 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
       this.produtos = data;
     }, error => {
       console.error('Erro ao carregar todos os produtos', error);
-      // Adicione qualquer lógica de tratamento de erro aqui, se necessário
     });
   }
 
@@ -99,12 +101,35 @@ export class FrmFornecedoresCadastroComponent implements OnInit {
     if (tabLabel === 'Consulta') {
       this.router.navigate(['/frmfornecedoresconsulta']);
     } else if (tabLabel === 'Cadastro') {
-      // Evitar redirecionamento se estiver editando um fornecedor específico
       if (this.fornecedorId) {
         this.router.navigate(['/frmfornecedorescadastro', this.fornecedorId]);
       } else {
         this.router.navigate(['/frmfornecedorescadastro']);
       }
+    }
+  }
+
+  cancelar(): void {
+    // Lógica para cancelar
+    this.router.navigate(['/frmfornecedoresconsulta']);
+  }
+
+  salvar(): void {
+    // Lógica para salvar
+    if (this.fornecedorId) {
+      this.http.put(`https://localhost:7219/api/fornecedores/${this.fornecedorId}`, this.fornecedor).subscribe(() => {
+        console.log('Fornecedor atualizado com sucesso');
+        this.router.navigate(['/frmfornecedoresconsulta']);
+      }, error => {
+        console.error('Erro ao atualizar fornecedor', error);
+      });
+    } else {
+      this.http.post(`https://localhost:7219/api/fornecedores`, this.fornecedor).subscribe(() => {
+        console.log('Fornecedor salvo com sucesso');
+        this.router.navigate(['/frmfornecedoresconsulta']);
+      }, error => {
+        console.error('Erro ao salvar fornecedor', error);
+      });
     }
   }
 }

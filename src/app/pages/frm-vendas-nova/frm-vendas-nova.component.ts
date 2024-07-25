@@ -14,6 +14,7 @@ import { ClientesService, Clientes } from '../../services/clientes.service';
 import { ProdutosService, Produto } from '../../services/produtos.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../../services/auth.service';
 
 export interface Itens_Venda {
   nomeProduto: string;
@@ -49,12 +50,14 @@ export interface Venda {
 export class FrmVendasNovaComponent implements OnInit {
   displayedColumns: string[] = ['nomeProduto', 'quantidade', 'valorUnitario', 'actions'];
   dataSource = new MatTableDataSource<Itens_Venda>();
-  venda: Venda = { vendas_Id: 0, clienteId: 0, itens_Venda: [] }; // Atualize para `itens_Venda`
+  venda: Venda = { vendas_Id: 0, clienteId: 0, itens_Venda: [] };
   activeTabIndex = 1;
   clientes: Clientes[] = [];
   produtosDisponiveis: Produto[] = [];
   clienteSelecionado: Clientes | undefined;
   produtoSelecionado: Itens_Venda | undefined;
+  login: string | null = null;
+  sessionDuration: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -62,7 +65,8 @@ export class FrmVendasNovaComponent implements OnInit {
     private http: HttpClient,
     private clientesService: ClientesService,
     private produtosService: ProdutosService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -71,7 +75,15 @@ export class FrmVendasNovaComponent implements OnInit {
     });
     this.carregarClientes();
     this.carregarProdutosDisponiveis();
+    this.login = this.authService.getLogin(); // Obtém o login do usuário logado
+    this.sessionDuration = this.authService.getSessionDuration(); // Obtém a duração da sessão
+    console.log('Login:', this.login); // Log para depuração
+
+    if (this.login === null) {
+      console.warn('Login is null. Please check the AuthService.');
+    }
   }
+
 
   carregarClientes(): void {
     this.clientesService.getClientes().subscribe((data: Clientes[]) => {
@@ -91,15 +103,15 @@ export class FrmVendasNovaComponent implements OnInit {
 
   selecionarCliente(cliente: Clientes): void {
     this.clienteSelecionado = cliente;
-    this.venda.clienteId = cliente.clienteId; // Atualiza o clienteId da venda
+    this.venda.clienteId = cliente.clienteId;
   }
 
   selecionarProduto(produto: Produto): void {
     this.produtoSelecionado = {
       nomeProduto: produto.nomeProduto,
-      quantidade: 1, // Default quantity
+      quantidade: 1,
       valorUnitario: produto.valorDeVenda,
-      valorDeVenda: produto.valorDeVenda, // Inicialmente igual ao valor unitário
+      valorDeVenda: produto.valorDeVenda,
       productId: produto.productId
     };
   }
@@ -108,7 +120,7 @@ export class FrmVendasNovaComponent implements OnInit {
     if (this.produtoSelecionado) {
       this.venda.itens_Venda.push({ ...this.produtoSelecionado });
       this.dataSource.data = [...this.venda.itens_Venda];
-      this.produtoSelecionado = undefined; // Limpar o produto selecionado após adicionar à lista
+      this.produtoSelecionado = undefined;
     }
   }
 
@@ -128,6 +140,7 @@ export class FrmVendasNovaComponent implements OnInit {
           valorDeVenda: produto.valorDeVenda
         }))
       };
+      console.log('Dados da venda a serem enviados:', novaVenda);
 
       const response = await this.http.post('https://localhost:7219/api/vendas', novaVenda).toPromise();
       console.log('Venda salva com sucesso', response);
@@ -150,12 +163,14 @@ export class FrmVendasNovaComponent implements OnInit {
     }
   }
 
-
   cancelar(): void {
     this.router.navigate(['/frmclientescadastro']);
   }
 
   onTabChange(event: any): void {
     this.activeTabIndex = event.index;
+    if (this.activeTabIndex === 0) {
+      this.router.navigate(['/frmvendasconsulta']);
+    }
   }
 }

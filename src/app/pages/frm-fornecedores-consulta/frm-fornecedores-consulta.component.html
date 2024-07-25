@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Consulta de Fornecedores</title>
-  <link rel="stylesheet" href="frm-fornecedores-consulta.component.css">
-</head>
-<body>
+<div class="header">
+  <div class="header-left">
+    <h1>Consulta de Fornecedores</h1>
+  </div>
+  <div class="header-right">
+    <p>Usuário: {{ userName }}</p>
+    <p>Tempo Logado: {{ loginTime }}</p>
+  </div>
+</div>
+
   <div class="tabcontrol">
     <mat-tab-group (selectedTabChange)="onTabChange($event)">
       <mat-tab label="Consulta" active>
@@ -53,7 +56,7 @@
 
           <!-- Botões de ação -->
           <div class="action-buttons">
-            <button mat-raised-button color="warn">Excluir</button>
+            <button mat-raised-button color="warn" (click)="excluirFornecedorSelecionado()">Excluir</button>
             <button mat-raised-button color="accent">Novo</button>
           </div>
         </div>
@@ -64,5 +67,4 @@
       </mat-tab>
     </mat-tab-group>
   </div>
-</body>
-</html>
+

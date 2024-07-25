@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 import { FornecedorService } from '../../services/fornecedor.service';
+import { AuthService } from '../../services/auth.service';
+
 
 export interface Fornecedor {
   id: number;
@@ -40,15 +42,21 @@ export class FrmFornecedoresConsultaComponent implements OnInit {
   dataSource = new MatTableDataSource<Fornecedor>();
   filtroNome: string = '';
   fornecedorSelecionado: Fornecedor | null = null;
+  userName: string = '';
+  loginTime: string = '';
 
   constructor(
     private router: Router,
     private http: HttpClient,
-    private fornecedoresService: FornecedorService
+    private fornecedoresService: FornecedorService,
+    private authService: AuthService
+
   ) {}
 
   ngOnInit(): void {
     this.carregarFornecedores();
+    this.userName = this.authService.getLogin() || 'Usuário Desconhecido';
+    this.loginTime = this.authService.getSessionDuration();
   }
 
   carregarFornecedores(): void {

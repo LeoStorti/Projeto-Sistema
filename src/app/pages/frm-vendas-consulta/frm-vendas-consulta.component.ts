@@ -1,3 +1,4 @@
+// src/app/components/frm-vendas-consulta/frm-vendas-consulta.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
 
 export interface Vendas {
-  vendas_Id: number; // Ajuste para corresponder ao nome na API
+  vendas_Id: number;
   nf: string;
   clienteId: number;
   valorDeVenda: number;
@@ -38,10 +39,12 @@ export interface Vendas {
   styleUrls: ['./frm-vendas-consulta.component.css']
 })
 export class FrmVendasConsultaComponent implements OnInit {
-  displayedColumns: string[] = ['vendas_Id', 'nf', 'clienteId', 'valorDeVenda', 'produtos_Nome', 'produtos_Id', 'numero_Pedido']; // Ajuste para corresponder aos nomes na interface
+  displayedColumns: string[] = ['vendas_Id', 'nf', 'clienteId', 'valorDeVenda', 'produtos_Nome', 'produtos_Id', 'numero_Pedido'];
   dataSource = new MatTableDataSource<Vendas>();
   filtroNome: string = '';
   vendasSelecionada: Vendas | null = null;
+  userName: string = 'Usuário'; // Substitua com o nome do usuário logado
+  currentTime: string = '';
 
   constructor(
     private router: Router,
@@ -50,12 +53,14 @@ export class FrmVendasConsultaComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarVendas();
+    this.updateTime();
+    setInterval(() => this.updateTime(), 1000); // Atualiza a hora a cada segundo
   }
 
   carregarVendas(): void {
     this.http.get<Vendas[]>('https://localhost:7219/api/vendas')
       .subscribe((data: Vendas[]) => {
-        console.log('Dados carregados:', data); // Verifique se os dados são carregados corretamente
+        console.log('Dados carregados:', data);
         this.dataSource.data = data;
       }, error => {
         console.error('Erro ao carregar vendas', error);
@@ -106,5 +111,10 @@ export class FrmVendasConsultaComponent implements OnInit {
     } else {
       console.warn('Nenhuma venda selecionada para excluir.');
     }
+  }
+
+  updateTime() {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString(); // Exibe no formato HH:MM:SS
   }
 }
